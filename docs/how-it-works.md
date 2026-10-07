@@ -100,6 +100,29 @@ elseif pending and same_identity(pending.message, message) then
 ```
 
 并在 `COUNTER_NAMES` 里加上 `"skipped_translation_echo"`（`bump` 对未登记的名字是静默忽略，不加也能跑，
-只是清单里看不到计数）。改完用插件自带的 `tools/build_package.py` 重新打包，
-或直接改游戏 `data` 目录里那份已部署的补丁（容器末尾是一段纯 Lua 文本，chunk 长度写在它前面 8 字节、
-总长写在 `+0x20`，两处都要同步）。
+只是清单里看不到计数）。
+
+改完必须重新打包，两条路：
+
+**1. 首选：跑插件自带的 `tools/build_package.py`**，它会把下面所有长度自己算好。
+
+**2. 只改游戏 `data` 目录里那份已部署的补丁**时，必须同步**三处**长度，漏一处会让整个插件
+**静默失效**——加载器按 TOC 声明的长度读取，会把 Lua 源码尾部截掉，编译不过，插件一行都不执行、
+连日志都不会有：
+
+| 位置 | 含义 | 必须等于 |
+| --- | --- | --- |
+| 源码起点前方 8 字节 | 资源信封 `u32 source_len, u32 kind=2` | 源码字节数 |
+| TOC 条目起点 + 56 | 该资源的 `resource_len` | 源码字节数 + 8 |
+| 容器 `+0x20` | 容器总长 | 文件实际长度 |
+
+实测（2026-10-07）：源码加了 779 字节，只更新了信封与容器总长、漏掉 TOC 那处，插件自那次 Deploy 之后完全没反应——
+`%LOCALAPPDATA%\HD2ChatTranslate\mailbox\*.json` 与 `probe\*.json` 都不再更新，游戏内也看不到任何翻译。
+`tools/fix_archive_toc.py <archive>` 能幂等地把三处长度对齐并复核，比手改安全。
+
+验证要**按 TOC 声明的长度**抽资源再编译（`b[i+8 : i+resource_len]`），**不要一直抽到文件尾**：
+抽到文件尾会把被截断的余量也读进来，看着是好的，而加载器只读 TOC 那么多。
+
+⚠️ 只改 `data\` 那份，只在不再 Deploy 的前提下有效：Arsenal 下次 Deploy 会用它库里的副本
+（`...\hd2arsenal\mods\<mod>\Addon\...patch_0`）覆盖回去。要么连库里那份一起改，
+要么就用路线 1 出个新包重新导入。
