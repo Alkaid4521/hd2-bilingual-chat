@@ -46,3 +46,10 @@
 
 MIT 许可。本 mod 只在 Windows + 官方反作弊环境下测试过；它不做任何绕过反作弊的动作，也不修改游戏文件。
 游戏更新后偏移的重新定位方法见 `docs/how-it-works.md`。
+
+## 第三方
+
+本 mod 与 `hd2-chat-translate` **没有隶属关系**，也不包含、不分发它的任何代码或资源。与它共存所需的几行补丁见
+`docs/how-it-works.md` §6——那是你在**自己那份** GPL-3.0-only 副本上做的本地修改，**打好补丁的插件包请只自用**，
+转发它属于按 GPL-3.0 传播修改后的第三方作品。运行依赖
+[Bingus Shared Loader](https://github.com/CowboyBingus/BingusSharedLoader)（不随本 mod 分发）。
