@@ -126,3 +126,8 @@ elseif pending and same_identity(pending.message, message) then
 ⚠️ 只改 `data\` 那份，只在不再 Deploy 的前提下有效：Arsenal 下次 Deploy 会用它库里的副本
 （`...\hd2arsenal\mods\<mod>\Addon\...patch_0`）覆盖回去。要么连库里那份一起改，
 要么就用路线 1 出个新包重新导入。
+
+> 上面引用的那一行 `elseif ... same_identity(...)` 是对方文件里的**定位锚点**
+> （GPL-3.0-only，引自 [furina2233/hd2-chat-translate](https://github.com/furina2233/hd2-chat-translate)），
+> 其余几行是本 mod 作者写的补丁。本 mod 与该插件没有隶属关系，也不包含、不分发它的代码；
+> 改好的插件包请只自用——转发它属于按 GPL-3.0 传播修改后的第三方作品。

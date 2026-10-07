@@ -42,6 +42,10 @@ mod 把译文写进游戏的聊天输入框，然后把游戏内部「聊天面�
 本 mod 发出的译文带 `[EN]` / `[CN]` 前缀。如果你还装了会把英文消息自动翻成中文的插件，请让它跳过这两个前缀，
 否则译文会被再翻一次、聊天里层层叠加。给 `hd2-chat-translate` 打补丁的做法见 `docs/how-it-works.md` 末尾。
 
+本 mod 与 `hd2-chat-translate` **没有隶属关系**：本仓库不包含、也不分发它的任何代码或资源，那段做法是要你在
+**自己那份**上改。该插件是 GPL-3.0-only（见[上游仓库](https://github.com/furina2233/hd2-chat-translate)），
+所以**打好补丁的插件包请只自用、不要转发**——转发修改后的 GPL 作品，要按 GPL-3.0 一并提供源码与许可。
+
 ## 已知限制
 
 - 需要联网与可用的模型额度；每条消息一次请求，端到端约 0.6–1.5 秒。
@@ -73,6 +77,10 @@ python tools/pack_addon.py --src src/bilingual_chat.lua --path mods/<you>/biling
 ## License
 
 MIT，见 `LICENSE`。
+
+第三方：运行依赖 [Bingus Shared Loader](https://github.com/CowboyBingus/BingusSharedLoader)（不随本 mod 分发）。
+`template/patch_header.template` 只是 200 字节的容器格式头（魔数、类型 id、长度字段），不含任何第三方代码或文本；
+其中标识用的 file id 字段在仓库里已归零——打包时本来就会被覆盖，构建产物逐字节不变。
 
 ---
 
