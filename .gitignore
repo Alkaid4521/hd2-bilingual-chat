@@ -1,5 +1,6 @@
 # build output that is regenerated: keep the release zip, ignore the unpacked folder
 dist/*/
 tmp/
+work/
 __pycache__/
 *.pyc

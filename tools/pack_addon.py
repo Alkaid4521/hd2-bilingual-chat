@@ -75,12 +75,18 @@ def main():
     ap.add_argument('--version', required=True)
     ap.add_argument('--delivery', required=True)
     ap.add_argument('--description', default='')
+    ap.add_argument('--rewrite-header', action='store_true',
+                    help='rewrite the first line to "-- HD2-Addon: <path>" instead of requiring it '
+                         '(one source, several Arsenal identities)')
     ap.add_argument('--dist', default=os.path.join(PROJECT, 'dist'))
     args = ap.parse_args()
 
     src = args.src if os.path.isabs(args.src) else os.path.join(PROJECT, args.src)
     source = open(src, 'rb').read().replace(b'\r\n', b'\n')
     want = '-- HD2-Addon: ' + args.path
+    if args.rewrite_header:
+        rest = source.split(b'\n', 1)[1] if b'\n' in source else b''
+        source = want.encode() + b'\n' + rest
     assert source.split(b'\n', 1)[0].decode() == want, 'addon header line must be %r' % want
     for path, want_id in KNOWN.items():
         assert murmur64a(path) == want_id, 'murmur mismatch for ' + path
